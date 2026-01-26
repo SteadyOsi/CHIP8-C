@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 
 int main() {
     
-    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
+    std::ifstream file("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
 
     if (file) {
     
@@ -26,3 +27,6 @@ int main() {
     
     return 0;
 }
+
+// home computer: g++ 11.4.0
+// laptop: 15.2.0
