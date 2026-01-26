@@ -1,13 +1,28 @@
 #include <iostream>
+#include <fstream>
 
 int main() {
-    int numbers[10] = {1,22,3,4,35,6,75,8,9,10};
+    
+    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
 
-    for (int i = 0; i < 10; i++){
-        std::cout << numbers[i] << std::endl; 
+    if (file) {
+    
+        int data;
+
+        uint8_t bytes[2];
+        
+        while (file.read(reinterpret_cast<char*>(bytes), 2)) {
+
+            uint16_t opcode = (bytes[0] << 8) | bytes[1];
+
+            std::cout << std::hex << opcode << std::endl;
+        }
+        
+        file.close();
+    
+    } else {
+        std::cerr << "Error opening file." << std::endl;
     }
-
+    
     return 0;
 }
-
-
