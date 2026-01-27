@@ -2,29 +2,92 @@
 #include <fstream>
 #include <cstdint>
 
+int taskOne() {
+    std::ifstream file("input.txt");
+
+    if(!file){
+        std::cerr << "File failed to open";
+    }
+
+    char value[20];  
+    file >> value;
+
+    std::cout << value << std::endl;
+
+    return 0;
+}
+
+int taskTwo() { // read enteire line. 
+    std::ifstream file("input.txt");
+
+    if(!file){
+        std::cerr << "File failed to open";
+    }
+
+    std::string value;
+    while(std::getline(file, value)) {
+        std::cout << value << std::endl;
+    }
+
+    return 0;
+}
+
+int taskThree() { // Read Numbers and Compute Sum
+
+    std::ifstream file("input.txt");
+
+    int sum = 0;
+
+    if(!file){
+        std::cerr << "File failed to open";
+    }
+
+    int value;
+
+    while(file >> value){
+        // std::cout << value << std::endl;
+        sum = sum + value;
+    }
+
+    std::cout << sum << std::endl;
+
+
+    return 0;
+}
+
+int taskFour() { // Read numbers from numbers.txt, compute sum, write result to result.txt.
+    std::ifstream file("numbers.txt");
+    std::ofstream outp("result.txt");
+
+    int sum = 0;
+
+    if(!file and !outp){
+        std::cerr << "File failed to open";
+    }
+
+    int value;
+
+    while(file >> value){
+        // std::cout << value << std::endl;
+        sum = sum + value;
+    }
+
+    outp << sum;
+
+    return 0;
+}
+
+int taskFive() { // Determine File Size (Binary Thinking)
+    std::ifstream file("numbers.txt");
+
+    return 0;
+
+}
+
 int main() {
     
-    std::ifstream file("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
+    taskFour();
 
-    if (file) {
-    
-        int data;
-
-        uint8_t bytes[2];
-        
-        while (file.read(reinterpret_cast<char*>(bytes), 2)) {
-
-            uint16_t opcode = (bytes[0] << 8) | bytes[1];
-
-            std::cout << std::hex << opcode << std::endl;
-        }
-        
-        file.close();
-    
-    } else {
-        std::cerr << "Error opening file." << std::endl;
-    }
-    
     return 0;
 }
 
