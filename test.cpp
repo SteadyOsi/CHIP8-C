@@ -80,13 +80,38 @@ int taskFour() { // Read numbers from numbers.txt, compute sum, write result to 
 int taskFive() { // Determine File Size (Binary Thinking)
     std::ifstream file("numbers.txt");
 
+    if(!file){
+        std::cerr << "File failed to open";
+    }
+
+
+    file.seekg(0, std::ios::end);
+
+    float bytes = static_cast<float>(file.tellg());
+
+    float kb = bytes/1024; 
+    float mb = bytes/(1024 * 1024);
+
+    // there is a package you can include to not have chage the cout traling size 
+    std::cout << "file in Bytes : " << file.tellg() << std::endl;
+    std::cout << "file in KB    : " << kb << std::endl;
+    std::cout << "file in MB    : " << mb << std::endl;
+
     return 0;
 
 }
 
+int taskSix() { // Read Binary File into Memory
+    std::ifstream file("");
+
+    
+
+    return 0;
+}
+
 int main() {
     
-    taskFour();
+    taskFive();
 
     return 0;
 }
