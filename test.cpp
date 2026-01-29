@@ -161,7 +161,7 @@ int taskSeven(){ // Task 7 — Interpret Binary Bytes
     }
 
         // Stretch: print first 16 bytes as hex
-    for(uint8_t i = 0;i < buffer.size()-1; i++){
+    for(uint8_t i = 0;i < buffer.size()-1; i+=2){
         uint16_t opcode = (buffer[i] << 8) | buffer[i+1]; 
         std::cout 
             << "0x"
@@ -175,21 +175,47 @@ int taskSeven(){ // Task 7 — Interpret Binary Bytes
     return 0;
 }
 
-int taskEight() {
-    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
-
+std::vector<uint8_t> romloader(std::string path) {
+    std::ifstream file(path, std::ios::binary);
+    
+    std::vector<uint8_t> buffer; 
+    
     if(!file){
         std::cerr << "File failed to open" << std::endl;
-        return 1;
+        return buffer; 
+    } 
+
+    uint8_t current;
+
+    while(file >> current){
+        buffer.push_back(current);    
     }
 
+    return buffer;
+}
+
+int taskEight() {
+
+    std::vector<uint8_t> buffer = romloader("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8");
     
+    // Stretch: print first 16 bytes as hex
+    for(uint8_t i = 0;i < buffer.size()-1; i+=2){
+        uint16_t opcode = (buffer[i] << 8) | buffer[i+1]; 
+        std::cout 
+            << "0x"
+            << std::hex
+            << std::setw(4)
+            << std::setfill('0')
+            << opcode
+            << std::endl;
+    }
+
     return 0;
 }
 
 int main() {
     
-    taskSeven();
+    taskEight();
 
     return 0;
 }
