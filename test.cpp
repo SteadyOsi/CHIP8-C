@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <cstdint>
+#include <vector>
+#include <iomanip>
+#include <cstdint>
 
 int taskOne() {
     std::ifstream file("input.txt");
@@ -102,25 +105,91 @@ int taskFive() { // Determine File Size (Binary Thinking)
 }
 
 int taskSix() { // Read Binary File into Memory
-    std::ifstream file("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
     // Open with ios::binary
+    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
 
+    if(!file){
+        std::cerr << "File failed to open" << std::endl;
+        return 1;
+    }
+    
     // Determine file size
+    file.seekg(0, std::ios::end);
+    std::cout << "file in Bytes : " << file.tellg() << std::endl;
 
     // Allocate std::vector<uint8_t>
 
-    // Read entire file into it
+    std::vector<uint8_t> buffer; 
 
-    // Print “bytes loaded”
+    // Read entire file into it
+    file.seekg(0);
+
+    uint8_t current;
+
+    while(file >> current){
+        buffer.push_back(current);    
+    }
+
+    std::cout << "Bytes loaded:"<< std::endl;
 
     // Stretch: print first 16 bytes as hex
+    for(uint8_t i = 0; i < 16 && i < buffer.size(); i++){
+        std::cout 
+        << "0x"
+        << std::hex 
+        << int(buffer[i]) 
+        << std::endl;
+    }
+    
+    return 0;
+}
+
+int taskSeven(){ // Task 7 — Interpret Binary Bytes
+    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
+
+    if(!file){
+        std::cerr << "File failed to open" << std::endl;
+        return 1;
+    }
+
+    std::vector<uint8_t> buffer; 
+
+    uint8_t current;
+
+    while(file >> current){
+        buffer.push_back(current);    
+    }
+
+        // Stretch: print first 16 bytes as hex
+    for(uint8_t i = 0;i < buffer.size()-1; i++){
+        uint16_t opcode = (buffer[i] << 8) | buffer[i+1]; 
+        std::cout 
+            << "0x"
+            << std::hex
+            << std::setw(4)
+            << std::setfill('0')
+            << opcode
+            << std::endl;
+    }
+
+    return 0;
+}
+
+int taskEight() {
+    std::ifstream file("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
+
+    if(!file){
+        std::cerr << "File failed to open" << std::endl;
+        return 1;
+    }
+
     
     return 0;
 }
 
 int main() {
     
-    taskSix();
+    taskSeven();
 
     return 0;
 }
