@@ -102,16 +102,25 @@ int taskFive() { // Determine File Size (Binary Thinking)
 }
 
 int taskSix() { // Read Binary File into Memory
-    std::ifstream file("");
+    std::ifstream file("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8", std::ios::binary);
+    // Open with ios::binary
 
+    // Determine file size
+
+    // Allocate std::vector<uint8_t>
+
+    // Read entire file into it
+
+    // Print “bytes loaded”
+
+    // Stretch: print first 16 bytes as hex
     
-
     return 0;
 }
 
 int main() {
     
-    taskFive();
+    taskSix();
 
     return 0;
 }
