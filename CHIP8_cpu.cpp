@@ -1,5 +1,7 @@
 #include "CHIP8_cpu.h"
 #include <cstddef>
+#include <fstream>
+#include <iostream>
 
 static constexpr std::array<uint8_t, 80> FONTSET = {
     0xF0,0x90,0x90,0x90,0xF0, // 0
@@ -65,5 +67,9 @@ void CHIP8_cpu::reset() {
         }
     }
     
+}
+
+void CHIP8_cpu::loadRom(const std::string& path) {
+    std::ifstream file(path);
 }
 
