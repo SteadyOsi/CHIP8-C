@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 static constexpr std::array<uint8_t, 80> FONTSET = {
     0xF0,0x90,0x90,0x90,0xF0, // 0
@@ -70,6 +71,38 @@ void CHIP8_cpu::reset() {
 }
 
 void CHIP8_cpu::loadRom(const std::string& path) {
-    std::ifstream file(path);
+    std::ifstream file(path, std::ios::binary);
+
+    std::vector<unit_t> buffer;
+
+    if(!file){
+        std::cerr << "File failed to open" << std::endl;
+        running = false;
+        return 1;
+    }
+
+    unit8_t current;
+
+    while(file >> current){
+        buffer.push_back(current);
+    }
+
+    // the rom is in buffer
+
+    if(buffer.empty()){
+        throw std::runtime_error("ROM load failed or file empty");
+    }
+
+    constexpr uint16_t start = 0x200;
+
+    if(buffer.size() > memory.size - start){
+        throw std::runtime_error("ROM too big");
+    }
+
+    for(size_t i = 0; i < buffer.size(); i++){
+        memory[0x200 + i] = buffer[i];
+    }
+
+    PC = 0x200;
 }
 

@@ -1,14 +1,15 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <string>
 
 class CHIP8_cpu {
 
 public:
     CHIP8_cpu();
-    
-    uint12_t I; // index register
-    uint12_t PC; // program counter 
+
+    uint16_t I; // index register
+    uint16_t PC; // program counter 
     uint8_t SP; // stack pointer 
     uint8_t DT; // delay timer 
     uint8_t ST; // sound timer
@@ -25,7 +26,7 @@ public:
 
     void loadRom(const std::string& path);
 
-    void decodeEx(uint16_t opcode)
+    void decodeEx(uint16_t opcode);
 
     uint16_t fetch();
 };
