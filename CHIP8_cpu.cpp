@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <iomanip>
+#include <cstdint>
 
 static constexpr std::array<uint8_t, 80> FONTSET = {
     0xF0,0x90,0x90,0x90,0xF0, // 0
@@ -73,15 +75,14 @@ void CHIP8_cpu::reset() {
 void CHIP8_cpu::loadRom(const std::string& path) {
     std::ifstream file(path, std::ios::binary);
 
-    std::vector<unit_t> buffer;
+    std::vector<uint8_t> buffer;
 
     if(!file){
         std::cerr << "File failed to open" << std::endl;
         running = false;
-        return 1;
     }
 
-    unit8_t current;
+    uint8_t current;
 
     while(file >> current){
         buffer.push_back(current);
@@ -95,7 +96,7 @@ void CHIP8_cpu::loadRom(const std::string& path) {
 
     constexpr uint16_t start = 0x200;
 
-    if(buffer.size() > memory.size - start){
+    if(buffer.size() > memory.size() - start){
         throw std::runtime_error("ROM too big");
     }
 
