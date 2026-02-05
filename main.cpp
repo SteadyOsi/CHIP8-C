@@ -4,7 +4,7 @@
 #include <iomanip>
 
 void debugMemory(){
-    
+
 }
 
 int main(){
@@ -14,7 +14,10 @@ int main(){
 
     cpu.loadRom(path);
 
-    std::cout << "this worked" << std::endl;
+    while(cpu.running){
+        uint16_t opcode = cpu.fetch();
+        cpu.decodeEx(opcode);
+    }
 
     for(int i = 0; i < 20; i+= 2){
         uint16_t opcode = (cpu.memory[0x200 + i] << 8) | cpu.memory[0x200 + i+1]; 
