@@ -59,7 +59,7 @@ private:
     void execute_SE_vx_vy(uint8_t vx, uint8_t vy);
 
     // 6xnn - LD Vx, byte
-    void execute_LD_vx_kk(uint8_t vx, uint8_t kk)
+    void execute_LD_vx_kk(uint8_t vx, uint8_t kk);
 
     // 7xnn - ADD Vx, byte
     void execute_ADD_vx_kk(uint8_t vx, uint8_t kk);
@@ -98,22 +98,45 @@ private:
     void execute_LD_i_nnn(uint16_t nnn);
 
     // Bnnn - JP V0, addr
+    void execute_JP_v0(uint16_t nnn);
 
     // Cxnn - RND Vx, byte
+    void execute_RND_vx_kk(uint8_t vx, uint8_t kk);
+
     // Dxyn - DRW Vx, Vy, nibble
+    void execute_DRW(uint8_t vx, uint8_t vy, uint8_t n);
 
     // Ex9E - SKP Vx
+    void execute_SKP(uint8_t vx);
+
     // ExA1 - SKNP Vx
+    void execute_SKNP(uint8_t vx);
 
     // Fx07 - LD Vx, DT
-    // Fx0A - LD Vx, K
-    // Fx15 - LD DT, Vx
-    // Fx18 - LD ST, Vx
-    // Fx1E - ADD I, Vx
-    // Fx29 - LD F, Vx
-    // Fx33 - LD B, Vx
-    // Fx55 - LD [I], Vx
-    // Fx65 - LD Vx, [I]
+    void execute_LD_vx_dt(uint8_t vx);
 
+    // Fx0A - LD Vx, K
+    void execute_LD_vx_k(uint8_t vx);
+
+    // Fx15 - LD DT, Vx
+    void execute_LD_dt_vx(uint8_t vx);
+
+    // Fx18 - LD ST, Vx
+    void execute_LD_st_vx(uint8_t vx);
+
+    // Fx1E - ADD I, Vx
+    void execute_ADD_i_vx(uint8_t vx);
+
+    // Fx29 - LD F, Vx
+    void execute_LD_f_vx(uint8_t vx);
+
+    // Fx33 - LD B, Vx
+    void execute_LD_b_vx(uint8_t vx);
+
+    // Fx55 - LD [I], Vx
+    void execute_LD_b_vx(uint8_t vx);
+
+    // Fx65 - LD Vx, [I]
+    void execute_LD_vx_i(uint8_t vx);
 };
 
