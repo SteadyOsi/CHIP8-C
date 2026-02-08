@@ -134,7 +134,7 @@ private:
     void execute_LD_b_vx(uint8_t vx);
 
     // Fx55 - LD [I], Vx
-    void execute_LD_b_vx(uint8_t vx);
+    void execute_LD_i_vx(uint8_t vx);
 
     // Fx65 - LD Vx, [I]
     void execute_LD_vx_i(uint8_t vx);

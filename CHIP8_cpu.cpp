@@ -130,10 +130,35 @@ void CHIP8_cpu::timerUpdate(){
 // 0nnn - SYS addr (ignored / legacy)
 
 // 00E0 - CLS
+void CHIP8_cpu::execute_CLS(){
+    for(size_t i = 0; i < display.size(); i++){
+        for(size_t j = 0; j < display[i].size(); j++){
+            display[i][j] = false; 
+        }
+    }
+
+    draw_Dirty = true;
+    increment();
+}
+
 // 00EE - RET
+void CHIP8_cpu::execute_RET(){
+    SP -= 1;
+    PC = stack[SP];
+}
 
 // 1nnn - JP addr
+void CHIP8_cpu::execute_JP(uint16_t nnn){
+    PC = nnn;
+}
+
 // 2nnn - CALL addr
+void CHIP8_cpu::execute_CALL(uint16_t nnn){
+    stack[SP] = (PC + 2);
+    SP += 1;
+    PC = nnn;
+}
+
 // 3xnn - SE Vx, byte
 // 4xnn - SNE Vx, byte
 // 5xy0 - SE Vx, Vy
