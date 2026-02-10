@@ -211,18 +211,84 @@ void CHIP8_cpu::execute_OR_vx_vy(uint8_t vx, uint8_t vy){
 }
 
 // 8xy2 - AND Vx, Vy
+void CHIP8_cpu::execute_AND_vx_vy(uint8_t vx, uint8_t vy){
+    V[vx] = V[vx] & V[vy];
+    increment();
+}
+
 // 8xy3 - XOR Vx, Vy
+void CHIP8_cpu::execute_XOR_vx_vy(uint8_t vx, uint8_t vy){
+    V[vx] = V[vx] ^ V[vy];
+    increment();
+}
+
 // 8xy4 - ADD Vx, Vy
+void CHIP8_cpu::execute_ADD_vx_vy(uint8_t vx, uint8_t vy){
+    V[0xF] = (V[vx] + V[vy] > 255) ? 1 : 0;
+    V[vx] = (V[vx] + V[vy]) & 0xFF;
+    increment();
+}
+
 // 8xy5 - SUB Vx, Vy
+void CHIP8_cpu::execute_SUB_vx_vy(uint8_t vx, uint8_t vy){
+    V[0xF] = (V[vx] >= V[vy]) ? 1 : 0;
+    V[vx] = (V[vx] - V[vy]) & 0xFF;
+    increment();  
+}
+
 // 8xy6 - SHR Vx
+void CHIP8_cpu::execute_SHR_vx(uint8_t vx){
+    V[0xF] = (V[vx] & 0x01);
+    V[vx] >>= 1;
+    increment();
+}
+
 // 8xy7 - SUBN Vx, Vy
+void CHIP8_cpu::execute_SUBN_vx_vy(uint8_t vx, uint8_t vy){
+    uint8_t x = V[vx];
+    uint8_t y = V[vy];
+
+    V[0xF] = (y >= x) ? 1 : 0;
+    V[x] = (V[y] - V[x]) & 0xFF;
+
+    increment();
+}
+
 // 8xyE - SHL Vx
+void CHIP8_cpu::execute_SHL_vx(uint8_t vx){
+    V[0xF] = (V[vx] & 0x80) >> 7;
+    V[vx] = (V[vx] << 1) & 0xFF;
+    increment();
+}
 
 // 9xy0 - SNE Vx, Vy
+void CHIP8_cpu::execute_SNE_vx_vy(uint8_t vx, uint8_t vy){
+    if(V[vx] != V[vy]){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
+
 // Annn - LD I, addr
+void CHIP8_cpu::execute_LD_i_nnn(uint16_t nnn){
+
+}
+
 // Bnnn - JP V0, addr
-// Cxnn - RND Vx, byte
+void CHIP8_cpu::execute_JP_v_nnn(uint16_t nnn){
+
+}
+
+// Cxkk - RND Vx, byte
+void CHIP8_cpu::execute_RND_vx_kk(uint8_t vx, uint8_t kk){
+
+}
+
 // Dxyn - DRW Vx, Vy, nibble
+void CHIP8_cpu::execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n){
+
+}
 
 // Ex9E - SKP Vx
 // ExA1 - SKNP Vx
