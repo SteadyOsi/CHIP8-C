@@ -160,13 +160,56 @@ void CHIP8_cpu::execute_CALL(uint16_t nnn){
 }
 
 // 3xnn - SE Vx, byte
+void CHIP8_cpu::execute_SE_vx_kk(uint8_t vx, uint8_t kk){
+    if(V[vx] == kk){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
+
 // 4xnn - SNE Vx, byte
+void CHIP8_cpu::execute_SNE_vx_kk(uint8_t vx, uint8_t kk){
+    if(V[vx] != kk){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
+
 // 5xy0 - SE Vx, Vy
+void CHIP8_cpu::execute_SE_vx_vy(uint8_t vx, uint8_t vy){
+    if(V[vx] == V[vy]){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
+
 // 6xnn - LD Vx, byte
+void CHIP8_cpu::execute_LD_vx_kk(uint8_t vx, uint8_t kk) {
+    V[vx] = kk;
+    increment();
+}
+
 // 7xnn - ADD Vx, byte
+void CHIP8_cpu::execute_ADD_vx_kk(uint8_t vx, uint8_t kk){
+    V[vx] = (V[vx] + kk) & 0xFF;
+    increment();
+}
 
 // 8xy0 - LD Vx, Vy
+void CHIP8_cpu::execute_LD_vx_vy(uint8_t vx, uint8_t vy) {
+    V[vx] = V[vy];
+    increment();
+}
+
 // 8xy1 - OR Vx, Vy
+void CHIP8_cpu::execute_OR_vx_vy(uint8_t vx, uint8_t vy){
+    V[vx] = V[vx] | V[vy];
+    increment(); 
+}
+
 // 8xy2 - AND Vx, Vy
 // 8xy3 - XOR Vx, Vy
 // 8xy4 - ADD Vx, Vy
