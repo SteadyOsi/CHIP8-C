@@ -279,7 +279,7 @@ void CHIP8_cpu::execute_LD_i_nnn(uint16_t nnn){
 
 // Bnnn - JP V0, addr
 void CHIP8_cpu::execute_JP_v_nnn(uint16_t nnn){
-    pc = nnn + V[0];
+    PC = nnn + V[0];
 }
 
 // Cxkk - RND Vx, byte
@@ -294,18 +294,106 @@ void CHIP8_cpu::execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n){
 }
 
 // Ex9E - SKP Vx
+void CHIP8_cpu::execute_SKP_vx(uint8_t vx){
+    uint8_t regX = V[vx] & 0x0F;
+
+    bool key = keys[regX];
+
+    if(key){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
+
 // ExA1 - SKNP Vx
+void CHIP8_cpu::execute_SKNP_vx(uint8_t vx){
+    uint8_t regX = V[vx] & 0x0F;
+
+    bool key = keys[regX];
+
+    if(!key){
+        PC += 4;
+    } else {
+        increment();
+    }
+}
 
 // Fx07 - LD Vx, DT
-// Fx0A - LD Vx, K
-// Fx15 - LD DT, Vx
-// Fx18 - LD ST, Vx
-// Fx1E - ADD I, Vx
-// Fx29 - LD F, Vx
-// Fx33 - LD B, Vx
-// Fx55 - LD [I], Vx
-// Fx65 - LD Vx, [I]
+void CHIP8_cpu::execute_LD_vx_dt(uint8_t vx){
+    V[vx] = DT;
+    increment();
+}
 
+// Fx0A - LD Vx, K
+void CHIP8_cpu::execute_LD_vx_k(uint8_t vx){
+    for(int i = 0; i < 16; i++){
+        if(keys[i]){
+            V[vx] = i;
+            increment();
+            return;
+        }
+    }
+}
+
+// Fx15 - LD DT, Vx
+void CHIP8_cpu::execute_LD_dt_vx(uint8_t vx){
+    DT = V[vx];
+    increment();
+}
+
+// Fx18 - LD ST, Vx
+void CHIP8_cpu::execute_LD_st_vx(uint8_t vx){
+    ST = V[vx];
+    increment();
+}
+
+// Fx1E - ADD I, Vx
+void CHIP8_cpu::execute_ADD_i_vx(uint8_t vx){
+    I += V[vx];
+    increment();
+}
+
+// Fx29 - LD F, Vx
+void CHIP8_cpu::execute_LD_f_vx(uint8_t vx){
+    I = FONT_START + (V[vx] & 0x0F) * 5;
+    increment();
+}
+
+// Fx33 - LD B, Vx
+void CHIP8_cpu::execute_LD_b_vx(uint8_t vx){
+    uint8_t value = V[vx];
+
+    memory[I] = value / 100;
+    memory[I + 1] = (value / 10) % 10;
+    memory[I + 2] = value % 10;
+
+    increment();
+}
+
+// Fx55 - LD [I], Vx
+void CHIP8_cpu::execute_LD_i_vx(uint8_t vx){
+    uint8_t index = 0;
+
+    while(index <= vx) {
+        memory[I + index] = V[index];
+        index += 1;
+    }
+
+    increment();
+}
+
+// Fx65 - LD Vx, [I]
+void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
+    uint8_t index = 0;
+
+    while(index <= vx) {
+        V[index] = memory[I + index];
+        index += 1;
+    }
+
+    increment();
+}
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
     uint8_t firstByte = (opcode >> 8) & 0xF; 

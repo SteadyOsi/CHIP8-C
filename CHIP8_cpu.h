@@ -98,19 +98,19 @@ private:
     void execute_LD_i_nnn(uint16_t nnn);
 
     // Bnnn - JP V0, addr
-    void execute_JP_v0(uint16_t nnn);
+    void execute_JP_v_nnn(uint16_t nnn);
 
     // Cxnn - RND Vx, byte
     void execute_RND_vx_kk(uint8_t vx, uint8_t kk);
 
     // Dxyn - DRW Vx, Vy, nibble
-    void execute_DRW(uint8_t vx, uint8_t vy, uint8_t n);
+    void execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n);
 
     // Ex9E - SKP Vx
-    void execute_SKP(uint8_t vx);
+    void execute_SKP_vx(uint8_t vx);
 
     // ExA1 - SKNP Vx
-    void execute_SKNP(uint8_t vx);
+    void execute_SKNP_vx(uint8_t vx);
 
     // Fx07 - LD Vx, DT
     void execute_LD_vx_dt(uint8_t vx);
