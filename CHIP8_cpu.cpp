@@ -5,6 +5,7 @@
 #include <vector>
 #include <iomanip>
 #include <cstdint>
+#include <cstdlib>
 
 static constexpr std::array<uint8_t, 80> FONTSET = {
     0xF0,0x90,0x90,0x90,0xF0, // 0
@@ -272,22 +273,24 @@ void CHIP8_cpu::execute_SNE_vx_vy(uint8_t vx, uint8_t vy){
 
 // Annn - LD I, addr
 void CHIP8_cpu::execute_LD_i_nnn(uint16_t nnn){
-
+    I = nnn;
+    increment();
 }
 
 // Bnnn - JP V0, addr
 void CHIP8_cpu::execute_JP_v_nnn(uint16_t nnn){
-
+    pc = nnn + V[0];
 }
 
 // Cxkk - RND Vx, byte
 void CHIP8_cpu::execute_RND_vx_kk(uint8_t vx, uint8_t kk){
-
+    V[vx] = (rand() % 256) & kk;
+    increment();
 }
 
 // Dxyn - DRW Vx, Vy, nibble
 void CHIP8_cpu::execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n){
-
+    
 }
 
 // Ex9E - SKP Vx
