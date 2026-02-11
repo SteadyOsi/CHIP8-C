@@ -290,10 +290,37 @@ void CHIP8_cpu::execute_RND_vx_kk(uint8_t vx, uint8_t kk){
 
 // Dxyn - DRW Vx, Vy, nibble
 void CHIP8_cpu::execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n){
-    
+    std::array<uint8_t, 8> mask = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+
+    V[0xF] = 0;
+
+    uint8_t screenX = V[vx];
+    uint8_t screenY = V[vy];
+
+    int row = 0;
+    while(row < n){
+        uint8_t sprite = memory[I + row];
+
+        int col = 0;
+        while(col < 8){
+            uint8_t bit = sprite & mask[col];
+
+            if(display[(screenY + row) % 32][(screenX + col) % 64] == true && bit == mask[col]){
+                V[0xF] = 1;
+                display[(screenY + row) % 32][(screenX + col) % 64] ^= true;
+            } else if(bit == mask[col]){
+                display[(screenY + row) % 32][(screenX + col) % 64] ^= true;
+            }
+            col += 1;
+        }
+        row += 1;
+    }
+
+    draw_Dirty = true;
+    increment();
 }
 
-// Ex9E - SKP Vx
+// Ex9E - SKP Vx 
 void CHIP8_cpu::execute_SKP_vx(uint8_t vx){
     uint8_t regX = V[vx] & 0x0F;
 

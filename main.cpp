@@ -10,7 +10,7 @@ void debugMemory(){
 int main(){
     CHIP8_cpu cpu; 
 
-    const std::string path = "/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8";
+    const std::string path = "/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8";
 
     cpu.loadRom(path);
 
