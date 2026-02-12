@@ -110,6 +110,11 @@ void CHIP8_cpu::loadRom(const std::string& path) {
 }
 
 uint16_t CHIP8_cpu::fetch(){
+    if(PC + 2 >= 4096){
+        running = false;
+        std::cout << "the end is near" << std::endl;
+    }
+
     uint8_t firstByte = memory[PC];
     uint8_t secondByte = memory[PC + 1];
     return (firstByte << 8) | secondByte;
@@ -301,8 +306,8 @@ void CHIP8_cpu::execute_DRW_vx_vy_n(uint8_t vx, uint8_t vy, uint8_t n){
     while(row < n){
         uint8_t sprite = memory[I + row];
 
-        int col = 0;
-        while(col < 8){
+        uint8_t col = 0;
+        while(col < mask.size()){
             uint8_t bit = sprite & mask[col];
 
             if(display[(screenY + row) % 32][(screenX + col) % 64] == true && bit == mask[col]){
@@ -423,17 +428,46 @@ void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
 }
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
-    uint8_t firstByte = (opcode >> 8) & 0xF; 
+    uint8_t firstNib = (opcode >> 12) & 0xF;
 
-    switch (firstByte)
+    switch (firstNib)
     {
-    case 0x0E:
-        std::cout << "yo this is a opcode" << std::endl;
-        increment();
+    case 0x0:
+        if(opcode == 0x00E0){ // CLS
+            execute_CLS();
+        } else if (opcode == 0x00EE){ //RET
+            execute_RET();
+        }
+        break;
+    
+    case 0x1: // JP
+        uint16_t nnn = opcode & 0x0FFF;
+        execute_JP(nnn);
+        break;
+    
+    case 0x2: // CALL
+        uint16_t nnn = opcode & 0x0FFF;
+        execute_CALL(nnn);
+        break;   
+
+    case 0x3: // SE 
+        uint8_t xSE = (opcode >> 8) & 0x0F;
+        uint8_t kkSE = opcode & 0x00FF;
+        execute_SE_vx_kk(xSE, kkSE);
         break;
     
     default:
-        std::cout << "error at PC: " << std::hex << PC << std::endl;
+        std::cout << "error at PC: " 
+            << std::hex 
+            << std::setw(4) 
+            << std::setfill('0')
+            << PC 
+            << " UNIMP OPCODE :"
+            << std::hex 
+            << std::setw(4) 
+            << std::setfill('0')
+            << opcode
+            << std::endl;
         increment();
         break;
     }

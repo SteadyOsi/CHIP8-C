@@ -14,11 +14,12 @@ int main(){
 
     cpu.loadRom(path);
 
-    while(cpu.running){
+    while(cpu.running){ // main loop for cpu
         uint16_t opcode = cpu.fetch();
         cpu.decodeEx(opcode);
     }
 
+    std::cout << "" << std::endl;
     for(int i = 0; i < 20; i+= 2){
         uint16_t opcode = (cpu.memory[0x200 + i] << 8) | cpu.memory[0x200 + i+1]; 
 
