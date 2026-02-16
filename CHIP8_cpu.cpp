@@ -429,6 +429,10 @@ void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
     uint8_t firstNib = (opcode >> 12) & 0xF;
+    uint8_t nnn;
+    uint8_t kk;
+    uint8_t vx;
+
 
     switch (firstNib)
     {
@@ -441,20 +445,23 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
         break;
     
     case 0x1: // JP
-        uint16_t nnn = opcode & 0x0FFF;
+        nnn = opcode & 0x0FFF;
         execute_JP(nnn);
         break;
     
     case 0x2: // CALL
-        uint16_t nnn = opcode & 0x0FFF;
+        nnn = opcode & 0x0FFF;
         execute_CALL(nnn);
         break;   
 
     case 0x3: // SE 
-        uint8_t xSE = (opcode >> 8) & 0x0F;
-        uint8_t kkSE = opcode & 0x00FF;
-        execute_SE_vx_kk(xSE, kkSE);
+        vx = (opcode >> 8) & 0x0F;
+        kk = opcode & 0x00FF;
+        execute_SE_vx_kk(vx, kk);
         break;
+    // case 0x4:
+    //     uint8_t 
+    //     execute_SNE_vx_kk(vx, kk);
     
     default:
         std::cout << "error at PC: " 
