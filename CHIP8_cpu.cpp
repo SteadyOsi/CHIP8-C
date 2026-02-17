@@ -428,10 +428,12 @@ void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
 }
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
+    uint8_t lastNib = (opcode << 12) & 0xF;
     uint8_t firstNib = (opcode >> 12) & 0xF;
-    uint16_t nnn;
-    uint8_t kk;
-    uint8_t vx;
+    uint16_t nnn = opcode & 0x0FFF;
+    uint8_t kk = opcode & 0x00FF;
+    uint8_t vx = (opcode >> 8) & 0x0F;
+    uint8_t vy = (opcode >> 4) & 0x00F;
 
 
     switch (firstNib)
@@ -445,25 +447,56 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
         break;
     
     case 0x1: // JP
-        nnn = opcode & 0x0FFF;
         execute_JP(nnn);
         break;
     
     case 0x2: // CALL
-        nnn = opcode & 0x0FFF;
         execute_CALL(nnn);
         break;   
 
     case 0x3: // SE 
-        vx = (opcode >> 8) & 0x0F;
-        kk = opcode & 0x00FF;
         execute_SE_vx_kk(vx, kk);
         break;
-    case 0x4:
-        vx = (opcode >> 8) & 0x0F;
-        kk = opcode & 0x00FF;
+
+    case 0x4: //SNE
         execute_SNE_vx_kk(vx, kk);
         break;
+
+    case 0x5:
+        execute_SE_vx_vy(vx, vy);
+        break;
+
+    case 0x6:
+        execute_LD_vx_kk(vx, kk);
+        break;
+    
+    case 0x7:
+        execute_ADD_vx_kk(vx, kk);
+        break;
+
+    case 0x8:
+        if(lastNib == 0x0) {
+            execute_LD_vx_vy(vx, vy);
+        } else if(lastNib == 0x1){
+            execute_OR_vx_vy(vx, vy);
+        } else if (lastNib == 0x2){ 
+            execute_AND_vx_vy(vx, vy);
+        } else if (lastNib == 0x3){  
+            execute_XOR_vx_vy(vx, vy);
+        } else if (lastNib == 0x4){ 
+            execute_ADD_vx_vy(vx, vy);
+        } else if (lastNib == 0x5){ 
+            execute_SUB_vx_vy(vx, vy);
+        } else if (lastNib == 0x6){ 
+            execute_SHR_vx(vx);
+        } else if (lastNib == 0x7){ 
+            execute_SUBN_vx_vy(vx, vy);
+        } else if (lastNib == 0xE){ 
+            execute_SNE_vx_vy(vx, vy);
+        }
+        break;
+
+
     default:
         std::cout << "error at PC: " 
             << std::hex 
