@@ -86,7 +86,7 @@ void CHIP8_cpu::loadRom(const std::string& path) {
 
     uint8_t current;
 
-    while(file >> current){
+    while(file.read(reinterpret_cast<char*>(&current), 1)){
         buffer.push_back(current);
     }
 
@@ -110,7 +110,7 @@ void CHIP8_cpu::loadRom(const std::string& path) {
 }
 
 uint16_t CHIP8_cpu::fetch(){
-    if(PC + 2 >= 4096){
+    if(PC + 1 >= memory.size()){
         running = false;
         std::cout << "the end is near" << std::endl;
     }
@@ -255,7 +255,7 @@ void CHIP8_cpu::execute_SUBN_vx_vy(uint8_t vx, uint8_t vy){
     uint8_t y = V[vy];
 
     V[0xF] = (y >= x) ? 1 : 0;
-    V[x] = (V[y] - V[x]) & 0xFF;
+    V[x] = (V[vy] - V[vx]) & 0xFF;
 
     increment();
 }
@@ -429,7 +429,7 @@ void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
     uint8_t firstNib = (opcode >> 12) & 0xF;
-    uint8_t nnn;
+    uint16_t nnn;
     uint8_t kk;
     uint8_t vx;
 
@@ -459,10 +459,11 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
         kk = opcode & 0x00FF;
         execute_SE_vx_kk(vx, kk);
         break;
-    // case 0x4:
-    //     uint8_t 
-    //     execute_SNE_vx_kk(vx, kk);
-    
+    case 0x4:
+        vx = (opcode >> 8) & 0x0F;
+        kk = opcode & 0x00FF;
+        execute_SNE_vx_kk(vx, kk);
+        break;
     default:
         std::cout << "error at PC: " 
             << std::hex 
