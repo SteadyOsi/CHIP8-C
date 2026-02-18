@@ -428,12 +428,13 @@ void CHIP8_cpu::execute_LD_vx_i(uint8_t vx){
 }
 
 void CHIP8_cpu::decodeEx(uint16_t opcode){
-    uint8_t lastNib = (opcode << 12) & 0xF;
+    uint8_t lastNib = opcode & 0x000F;
     uint8_t firstNib = (opcode >> 12) & 0xF;
     uint16_t nnn = opcode & 0x0FFF;
     uint8_t kk = opcode & 0x00FF;
     uint8_t vx = (opcode >> 8) & 0x0F;
     uint8_t vy = (opcode >> 4) & 0x00F;
+    uint8_t n = opcode & 0x000F;
 
 
     switch (firstNib)
@@ -495,7 +496,52 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
             execute_SNE_vx_vy(vx, vy);
         }
         break;
+    
+    case 0xA:
+        execute_LD_i_nnn(nnn);
+        break;
+    
+    case 0xB:
+        execute_JP_v_nnn(nnn);
+        break;
 
+    case 0xC:
+        execute_RND_vx_kk(vx, kk);
+        break;
+
+    case 0xD:
+        execute_DRW_vx_vy_n(vx, vy, n);
+        break;
+
+    case 0xE:
+        if(kk == 0x9E){
+            execute_SKP_vx(vx);
+        } else if(kk == 0xA1){
+            execute_SKNP_vx(vx);
+        }
+        break;
+
+    case 0xF:
+        if(kk == 0x07) {
+            execute_LD_vx_dt(vx);
+        } else if(kk == 0x0A){
+            execute_LD_vx_k(vx);
+        } else if(kk == 0x15){
+            execute_LD_dt_vx(vx);
+        } else if(kk == 0x18){
+            execute_LD_st_vx(vx);
+        } else if(kk == 0x1E){
+            execute_ADD_i_vx(vx);
+        } else if(kk == 0x29){
+            execute_LD_f_vx(vx);
+        } else if(kk == 0x33){
+            execute_LD_b_vx(vx);
+        } else if(kk == 0x55){
+            execute_LD_i_vx(vx);
+        } else if(kk == 0x65){
+            execute_LD_vx_i(vx);
+        }
+        break;
 
     default:
         std::cout << "error at PC: " 
