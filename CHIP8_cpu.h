@@ -20,7 +20,7 @@ public:
     std::array<uint8_t, 16> V;
     std::array<uint16_t, 16> stack;
     std::array<bool, 16> keys;
-    std::array<std::array<uint8_t, 64>, 32> display;
+    std::array<std::array<bool, 64>, 32> display;
 
     void reset();
 
