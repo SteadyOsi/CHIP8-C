@@ -12,4 +12,4 @@ private:
     int window_Height;
     int window_Width;
 
-}
+};
