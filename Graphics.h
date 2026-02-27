@@ -5,11 +5,17 @@
 
 class Graphics {
 public:
+    Graphics();
+
     std::array<std::array<bool, 64>, 32> buffer;
-    int scale;
+    int scale = 20;
+    int window_Height = 32 * scale;
+    int window_Width = 64 * scale;
+
+    init_Graphics();
+    Render_Graphics();
+    end_Game();
 
 private:
-    int window_Height;
-    int window_Width;
 
 };

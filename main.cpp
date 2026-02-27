@@ -1,4 +1,5 @@
 #include "CHIP8_cpu.h"
+#include "Graphics.h"
 #include <iostream>
 #include <cstdint>
 #include <iomanip>
@@ -8,7 +9,7 @@ void debugMemory(){
 }
 
 int main(){
-    CHIP8_cpu cpu; 
+    CHIP8_cpu cpu;
 
     const std::string path = "/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8";
 
