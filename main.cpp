@@ -45,7 +45,5 @@ int main(){
             << std::endl;
     }
 
-
-
     return 0;
 }
