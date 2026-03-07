@@ -42,14 +42,14 @@ CHIP8_cpu::CHIP8_cpu()
         stack.fill(0);
         keys.fill(false);
 
-        for(size_t i = 0; i < display.size(); i++){
-            for(size_t j = 0; j < display[i].size(); j++){
-                display[i][j] = false; 
+        for(int y = 0; y < display.size(); y++){
+            for(int x = 0; x < display[y].size(); x++){
+                display[y][x] = false; 
             }
         }
 
         // Loads Font sprites starting at mem addi 0x50
-        for(size_t i = 0; i < FONTSET.size(); i++){
+        for(int i = 0; i < FONTSET.size(); i++){
             memory[FONT_START + i] = FONTSET[i];
         }
     }
