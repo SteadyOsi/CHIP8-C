@@ -12,7 +12,7 @@ int main(){
     CHIP8_cpu cpu;
     Graphics screen; 
 
-    const std::string path = "/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8";
+    const std::string path = "/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/games/Cave.ch8";
     cpu.loadRom(path);
 
     screen.init_Graphics(20);
