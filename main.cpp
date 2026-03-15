@@ -1,51 +1,69 @@
 #include "CHIP8_cpu.h"
 #include "Graphics.h"
+#include "Input.h"
 #include <iostream>
 #include <cstdint>
 #include <iomanip>
-
-void debugMemory(){
-
-}
+#include <chrono> 
+#include <cmath>
 
 int main(){
+
+    using clock = std::chrono::steady_clock;
     CHIP8_cpu cpu;
     Graphics screen; 
+    Input controls;
+    
 
-    const std::string path = "/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/games/Cave.ch8";
+    double cpuHz = 1.0/700.0;
+    double screenHz = 1.0/60.0;
+
+    const std::string path = "/home/jk/Documents/GitHub/chip8-roms/programs/Keypad Test [Hap, 2006].ch8";
     cpu.loadRom(path);
 
     screen.init_Graphics(20);
 
     SDL_Event e;
+
+    double cpuTimer = 0.0;
+    double renderTimer = 0.0;
     
+    auto lastTimer = clock::now();
+
+
     while(cpu.running){ // main loop for cpu
+        auto nowTimer = clock::now();
+        double time_dif = std::chrono::duration<double>(nowTimer - lastTimer).count();
+        lastTimer = nowTimer;
 
-        while(SDL_PollEvent(&e))
-        {
-            if(e.type == SDL_QUIT)
-                cpu.running = false;
+        cpuTimer += time_dif;
+        renderTimer += time_dif;
+
+        // while(SDL_PollEvent(&e))
+        // {
+        //     if(e.type == SDL_QUIT){
+        //         cpu.running = false;
+        //     }    
+        // }
+
+        controls.processInputs(cpu.running, cpu); // handles inputs
+
+        while(cpuTimer >= cpuHz){
+            uint16_t opcode = cpu.fetch();
+            cpu.decodeEx(opcode);
+
+            cpuTimer -= cpuHz;
         }
+        
 
-        uint16_t opcode = cpu.fetch();
-        cpu.decodeEx(opcode);
+        while(renderTimer >= screenHz){
+            screen.Render_Graphics(cpu.display);
 
-        screen.Render_Graphics(cpu.display);
-
-        SDL_Delay(16);
-
-    //     std::cout << "Address: " << "0x" << std::hex << (cpu.PC) << " opcode: ";
-
-    //     std::cout 
-    //         << "0x"
-    //         << std::hex
-    //         << std::setw(4)
-    //         << std::setfill('0')
-    //         << opcode 
-    //         << std::endl;
-    // }
-    
+            renderTimer -= screenHz;
+        }
     }
+
+    screen.end_Game();
 
     return 0;
 }

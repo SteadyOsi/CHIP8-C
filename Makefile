@@ -4,7 +4,7 @@ SDLFLAGS = $(shell pkg-config --cflags --libs sdl2)
 
 TARGET = chip8
 
-SRCS = main.cpp CHIP8_cpu.cpp Graphics.cpp
+SRCS = main.cpp CHIP8_cpu.cpp Graphics.cpp Input.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(TARGET)
