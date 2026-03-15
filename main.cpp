@@ -39,13 +39,6 @@ int main(){
         cpuTimer += time_dif;
         renderTimer += time_dif;
 
-        // while(SDL_PollEvent(&e))
-        // {
-        //     if(e.type == SDL_QUIT){
-        //         cpu.running = false;
-        //     }    
-        // }
-
         controls.processInputs(cpu.running, cpu); // handles inputs
 
         while(cpuTimer >= cpuHz){
