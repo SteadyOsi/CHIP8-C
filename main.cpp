@@ -1,18 +1,21 @@
 #include "CHIP8_cpu.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "Audio.h"
 #include <iostream>
 #include <cstdint>
 #include <iomanip>
 #include <chrono> 
 #include <cmath>
 
-int main(){
+int main()
+{
 
     using clock = std::chrono::steady_clock;
     CHIP8_cpu cpu;
     Graphics screen; 
     Input controls;
+    Audio audio;
     
 
     double cpuHz = 1.0/700.0;
@@ -31,7 +34,8 @@ int main(){
     auto lastTimer = clock::now();
 
 
-    while(cpu.running){ // main loop for cpu
+    while(cpu.running) // main loop for cpu
+    { 
         auto nowTimer = clock::now();
         double time_dif = std::chrono::duration<double>(nowTimer - lastTimer).count();
         lastTimer = nowTimer;
@@ -41,7 +45,8 @@ int main(){
 
         controls.processInputs(cpu.running, cpu); // handles inputs
 
-        while(cpuTimer >= cpuHz){
+        while(cpuTimer >= cpuHz) // cpu loop
+        { 
             uint16_t opcode = cpu.fetch();
             cpu.decodeEx(opcode);
 
@@ -49,8 +54,16 @@ int main(){
         }
         
 
-        while(renderTimer >= screenHz){
-            screen.Render_Graphics(cpu.display);
+        while(renderTimer >= screenHz) // graphics and sound loop
+        {
+            if(cpu.draw_Dirty)
+            {
+                screen.Render_Graphics(cpu.display);
+            }
+            
+            if(cpu.ST > 0) {
+                audio.beep();
+            }
 
             renderTimer -= screenHz;
         }
