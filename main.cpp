@@ -56,6 +56,8 @@ int main()
 
         while(renderTimer >= screenHz) // graphics and sound loop
         {
+            cpu.timerUpdate();
+
             if(cpu.draw_Dirty)
             {
                 screen.Render_Graphics(cpu.display);
