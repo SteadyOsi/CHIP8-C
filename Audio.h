@@ -2,7 +2,12 @@
 
 class Audio {
 public:
-    void beep();
+    void init();
+    void shutdown();
+    void setBeep(bool on);
+
+    bool beep = false;
 
 private:
+    SDL_AudioDeviceID device;
 };

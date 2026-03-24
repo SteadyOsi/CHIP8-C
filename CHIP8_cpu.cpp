@@ -255,7 +255,7 @@ void CHIP8_cpu::execute_SUBN_vx_vy(uint8_t vx, uint8_t vy){
     uint8_t y = V[vy];
 
     V[0xF] = (y >= x) ? 1 : 0;
-    V[x] = (V[vy] - V[vx]) & 0xFF;
+    V[vx] = (V[vy] - V[vx]) & 0xFF;
 
     increment();
 }
@@ -444,6 +444,8 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
             execute_CLS();
         } else if (opcode == 0x00EE){ //RET
             execute_RET();
+        } else {
+            increment();
         }
         break;
     
@@ -493,7 +495,7 @@ void CHIP8_cpu::decodeEx(uint16_t opcode){
         } else if (lastNib == 0x7){ 
             execute_SUBN_vx_vy(vx, vy);
         } else if (lastNib == 0xE){ 
-            execute_SNE_vx_vy(vx, vy);
+            execute_SHL_vx(vx);
         }
         break;
     

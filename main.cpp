@@ -5,26 +5,25 @@
 #include <iostream>
 #include <cstdint>
 #include <iomanip>
-#include <chrono> 
+#include <chrono>
 #include <cmath>
 
 int main()
 {
-
     using clock = std::chrono::steady_clock;
     CHIP8_cpu cpu;
     Graphics screen; 
     Input controls;
     Audio audio;
     
-
     double cpuHz = 1.0/700.0;
     double screenHz = 1.0/60.0;
 
-    const std::string path = "/home/jk/Documents/GitHub/chip8-roms/programs/Keypad Test [Hap, 2006].ch8";
+    const std::string path = "/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/games/Cave.ch8";
     cpu.loadRom(path);
 
     screen.init_Graphics(20);
+    audio.init();
 
     SDL_Event e;
 
@@ -33,7 +32,7 @@ int main()
     
     auto lastTimer = clock::now();
 
-
+    screen.Render_Graphics(cpu.display);
     while(cpu.running) // main loop for cpu
     { 
         auto nowTimer = clock::now();
@@ -51,8 +50,7 @@ int main()
             cpu.decodeEx(opcode);
 
             cpuTimer -= cpuHz;
-        }
-        
+        }   
 
         while(renderTimer >= screenHz) // graphics and sound loop
         {
@@ -61,17 +59,17 @@ int main()
             if(cpu.draw_Dirty)
             {
                 screen.Render_Graphics(cpu.display);
+                cpu.draw_Dirty = false;
             }
             
-            if(cpu.ST > 0) {
-                audio.beep();
-            }
+            audio.setBeep(cpu.ST > 0);
 
             renderTimer -= screenHz;
         }
     }
 
     screen.end_Game();
+    audio.shutdown();
 
     return 0;
 }
